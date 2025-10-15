@@ -187,10 +187,10 @@ with st.sidebar:
 
     st.markdown("### Compétences Techniques")
     st.markdown("""
-    - **Langages** : Python, SQL, C++, OCaml
-    - **Data Science** : Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn
+    - **Langages** : Python, R, SQL, C++
+    - **Data Science** : Pandas, NumPy, Scikit-learn, PyTorch, tensorMatplotlib, Seaborn
     - **Web/Frameworks** : Streamlit, Flask, HTML, CSS
-    - **Outils** : Git, Docker, Jupyter Notebook
+    - **Outils** : Git, Jupyter Notebook
     """)
 
     st.divider()
