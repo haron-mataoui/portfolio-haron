@@ -11,4 +11,4 @@ matplotlib==3.8.1
 seaborn==0.13.2
 
 # Gestion d’images
-Pillow==10.4.0
+pip install pillow==9.5.0
