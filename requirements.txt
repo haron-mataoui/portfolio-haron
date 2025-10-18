@@ -1,6 +1,6 @@
 # Interface & web
 streamlit==1.26.0
-flask>=2.3,<3
+flask==3.1.2
 plotly==6.0.0
 
 # Data & analyse
