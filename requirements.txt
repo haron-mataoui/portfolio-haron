@@ -11,4 +11,8 @@ matplotlib==3.8.1
 seaborn==0.13.2
 
 # Gestion d’images
-pip install pillow==9.5.0
+pillow==9.5.0
+
+# Deep learning (si utilisé dans nombres.py)
+torch==2.9.0
+torchvision==0.15.2
