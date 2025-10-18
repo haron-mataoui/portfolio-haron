@@ -13,6 +13,6 @@ seaborn==0.13.2
 # Gestion d’images
 pillow==9.5.0
 
-# Deep learning (si utilisé dans nombres.py)
+# Deep learning
 torch==2.9.0
 torchvision==0.15.2
