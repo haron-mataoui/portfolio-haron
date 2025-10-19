@@ -18,7 +18,8 @@ st.set_page_config(
     page_title="💳 Détection de Fraude Bancaire - TensorFlow",
     layout="wide"
 )
-st.title("💳 Détection de Fraude Bancaire avec TensorFlow (Version Pédagogique)")
+st.title("💳 Détection de Fraude Bancaire avec TensorFlow ")
+
 
 # ----------------- DATA LOADING -----------------
 @st.cache_data
@@ -61,7 +62,12 @@ with tabs[0]:
 
 
     st.write("### Distribution d’une colonne")
-    col_to_plot = st.selectbox("Sélectionner une colonne à visualiser", df.columns, index=len(df.columns)-1)
+    # Définit l'index de la colonne 'Time' comme défaut
+    try:
+        default_ix = df.columns.get_loc('Time')
+    except KeyError:
+        default_ix = 0 # Fallback
+    col_to_plot = st.selectbox("Sélectionner une colonne à visualiser", df.columns, index=default_ix)
 
     if pd.api.types.is_numeric_dtype(df[col_to_plot]):
         fig = px.histogram(df, x=col_to_plot, color="Class", nbins=50, log_y=True, title=f"Histogramme de {col_to_plot} par Classe")
@@ -110,9 +116,24 @@ with tabs[1]:
     # --- Gestion du déséquilibre ---
     st.subheader("2. Gestion du déséquilibre avec SMOTE")
     st.markdown("""
-    Le jeu de données d'entraînement est extrêmement déséquilibré. Pour aider le modèle à mieux apprendre les caractéristiques des fraudes, nous utilisons SMOTE (Synthetic Minority Over-sampling Technique).
-    **Important : SMOTE est appliqué UNIQUEMENT sur le jeu d'entraînement.**
+    Le jeu de données d'entraînement est **extrêmement déséquilibré** : il y a beaucoup plus de transactions légitimes que de fraudes. Si on entraînait le modèle directement dessus, il deviendrait "paresseux" et prédirait presque toujours "non-fraude", obtenant un score de précision élevé mais en étant inutile pour détecter les fraudes.
+
+    Pour corriger cela, nous utilisons **SMOTE (Synthetic Minority Over-sampling Technique)**.
     """)
+    with st.expander("🔎 Cliquez ici pour comprendre comment fonctionne SMOTE en détail"):
+        st.markdown("""
+        Plutôt que de simplement dupliquer les rares exemples de fraude que nous avons, SMOTE est plus intelligent :
+        
+        1.  Il prend un exemple de fraude au hasard.
+        2.  Il trouve ses voisins les plus proches dans l'espace des features (d'autres fraudes qui lui ressemblent).
+        3.  Il choisit un de ces voisins et **crée un nouvel exemple synthétique** sur la ligne qui relie les deux.
+        
+        Imaginez que vous avez deux points bleus (fraudes) très proches sur un graphique. SMOTE va ajouter un nouveau point bleu quelque part sur le segment entre ces deux points. En répétant ce processus, on peuple l'ensemble d'entraînement avec des exemples de fraudes plausibles et variés, sans simplement copier les données existantes.
+
+        **Résultat :** Le modèle dispose d'un jeu de données équilibré pour s'entraîner, ce qui l'oblige à apprendre les caractéristiques distinctives des fraudes de manière beaucoup plus efficace.
+        
+        **Important : SMOTE est appliqué UNIQUEMENT sur le jeu d'entraînement** pour ne pas introduire de données synthétiques dans notre ensemble de test, qui doit rester représentatif de la réalité.
+        """)
     st.write(f"Distribution des classes **avant SMOTE** (dans le training set) :")
     st.json(pd.Series(y_train).value_counts().to_dict())
 
@@ -187,11 +208,11 @@ with tabs[2]:
         
         Ce tableau est le bulletin de notes le plus important pour notre modèle. L'accuracy seule est trompeuse ici. Voici comment lire les résultats pour la classe **1 (Fraude)** :
 
-        -   **Recall (Rappel)** : **C'est la métrique la plus cruciale.** Un rappel de ~0.91 signifie que le modèle a réussi à **identifier 91% de toutes les fraudes réelles**. Notre objectif principal est d'avoir ce chiffre le plus haut possible, car nous voulons rater le moins de fraudes possible.
+        -   **Recall (Rappel)** : **C'est la métrique la plus cruciale.** Un rappel élevé signifie que le modèle a réussi à **identifier un grand pourcentage des fraudes réelles**. Notre objectif principal est d'avoir ce chiffre le plus haut possible.
 
-        -   **Precision (Précision)** : C'est le compromis. Une précision faible (~0.06) signifie que **lorsque le modèle sonne l'alarme, il n'a raison que dans 6% des cas**. Le reste du temps, ce sont des "fausses alertes" (des transactions légitimes signalées à tort).
+        -   **Precision (Précision)** : C'est le compromis. Une précision faible signifie que **lorsque le modèle sonne l'alarme, il peut souvent se tromper**. Le reste du temps, ce sont des "fausses alertes".
 
-        -   **Le Dilemme :** C'est tout à fait normal ! Pour attraper un maximum de fraudes (haut rappel), le modèle doit être très sensible, ce qui génère mécaniquement plus de fausses alertes (basse précision). Les résultats que vous voyez sont donc **bons et réalistes** pour un système de détection de fraude : on accepte d'enquêter sur plusieurs fausses alertes pour être sûr de bloquer la majorité des vraies fraudes.
+        -   **Le Dilemme :** C'est tout à fait normal ! Pour attraper un maximum de fraudes (haut rappel), le modèle doit être très sensible, ce qui génère mécaniquement plus de fausses alertes (basse précision). Les résultats que vous voyez sont donc **bons et réalistes** pour un système de détection de fraude.
         """)
         
         report = classification_report(y_test, y_pred, output_dict=True)
@@ -202,7 +223,7 @@ with tabs[2]:
         st.markdown("Visualise directement le nombre de bonnes et de mauvaises prédictions.")
         cm = confusion_matrix(y_test, y_pred)
         fig_cm, ax_cm = plt.subplots(figsize=(6, 5))
-        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax_cm,
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax_cm=ax_cm,
                     xticklabels=['Légitime', 'Fraude'], yticklabels=['Légitime', 'Fraude'])
         ax_cm.set_xlabel("Prédiction")
         ax_cm.set_ylabel("Valeur Réelle")
@@ -293,3 +314,4 @@ with tabs[3]:
             st.write(f"Le score de probabilité de fraude est de **{pred_proba:.4f}**. Le seuil de classification est à 0.5.")
     else:
         st.warning("⚠️ Lancez d'abord l'entraînement du modèle dans l'onglet 'Entraînement du modèle'.")
+
