@@ -36,19 +36,17 @@ tabs = st.tabs([
 with tabs[0]:
     st.header(" Exploration du Dataset")
 
-    st.write("### Aperçu des données :")
     st.dataframe(df.head())
-
     st.write(f"**Taille du dataset :** {df.shape}")
     st.write("**Colonnes :**", list(df.columns))
 
-    # Visualisation native Streamlit
+    # Distribution des montants
     st.write("### Distribution des montants")
     st.bar_chart(df['Amount'].value_counts().sort_index())
 
+    # Distribution des classes
     st.write("### Distribution des classes (0 = normal, 1 = fraude)")
-    class_counts = df['Class'].value_counts()
-    st.bar_chart(class_counts)
+    st.bar_chart(df['Class'].value_counts())
 
 # ----------------- TAB 2: ENTRAÎNEMENT -----------------
 with tabs[1]:
@@ -81,7 +79,7 @@ with tabs[1]:
 
     model = build_model(X_train.shape[1])
 
-    with st.spinner(" Entraînement du modèle en cours..."):
+    with st.spinner("⏳ Entraînement du modèle en cours..."):
         history = model.fit(
             X_train, y_train,
             validation_split=0.2,
@@ -91,7 +89,7 @@ with tabs[1]:
         )
     st.success(" Entraînement terminé !")
 
-    st.subheader(" Architecture du modèle")
+    st.subheader("📚 Architecture du modèle")
     model.summary(print_fn=lambda x: st.text(x))
 
     # Stocker pour onglets suivants
@@ -129,32 +127,24 @@ with tabs[2]:
         st.metric(label="Accuracy", value=f"{acc:.4f}")
         st.metric(label="AUC", value=f"{auc:.4f}")
 
+        # Rapport de classification
         st.write("### Rapport de classification")
         st.dataframe(pd.DataFrame(classification_report(y_test, y_pred, output_dict=True)).T)
 
-        # Matrice de confusion (toujours Matplotlib/Seaborn ici)
-        cm = confusion_matrix(y_test, y_pred)
+        # Matrice de confusion avec st.dataframe
         st.write("### Matrice de confusion")
-        import matplotlib.pyplot as plt
-        import seaborn as sns
-        fig, ax = plt.subplots()
-        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax)
-        ax.set_xlabel("Prédit")
-        ax.set_ylabel("Réel")
-        st.pyplot(fig)
+        cm = pd.DataFrame(confusion_matrix(y_test, y_pred),
+                          index=["Réel 0", "Réel 1"],
+                          columns=["Prédit 0", "Prédit 1"])
+        st.dataframe(cm)
 
-        # Courbe ROC
+        # Courbe ROC avec st.line_chart
         st.write("### Courbe ROC")
         fpr, tpr, _ = roc_curve(y_test, model.predict(X_test))
-        fig, ax = plt.subplots()
-        ax.plot(fpr, tpr, label=f"AUC = {auc:.3f}")
-        ax.plot([0, 1], [0, 1], '--', color='gray')
-        ax.set_xlabel("Faux positifs")
-        ax.set_ylabel("Vrais positifs")
-        ax.legend()
-        st.pyplot(fig)
+        roc_df = pd.DataFrame({"FPR": fpr, "TPR": tpr})
+        st.line_chart(roc_df.set_index("FPR"))
     else:
-        st.warning(" Entraîne d'abord le modèle dans l'onglet précédent.")
+        st.warning("⚠️ Entraîne d'abord le modèle dans l'onglet précédent.")
 
 # ----------------- TAB 4: PRÉDICTION -----------------
 with tabs[3]:
@@ -178,4 +168,4 @@ with tabs[3]:
             else:
                 st.success(" Transaction probablement légitime.")
     else:
-        st.warning(" Entraîne d'abord le modèle dans l'onglet ' Entraînement'.")
+        st.warning("⚠️ Entraîne d'abord le modèle dans l'onglet ' Entraînement'.")
