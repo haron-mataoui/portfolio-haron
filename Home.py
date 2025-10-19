@@ -260,7 +260,6 @@ projects = [
         "title": " Analyse de portefeuille ", 
         "desc": " Permet d’explorer des données boursières historiques de plusieurs actions, de visualiser leurs prix ajustés, rendements, volatilité, corrélations et de réaliser une analyse en composantes principales (PCA). Elle intègre également un modèle simple de prévision linéaire des prix futurs.", 
         "img": "assets/pf.png", 
-        "code": "", 
         "Lancer":"/Analyse_de_portefeuille",
         "tech": ["yfinance", "NumPy", "pandas", "sklearn", "PCA"]
     },
