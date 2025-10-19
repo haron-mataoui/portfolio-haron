@@ -188,7 +188,7 @@ with st.sidebar:
     st.markdown("### Compétences Techniques")
     st.markdown("""
     - **Langages** : Python, R, SQL, C++
-    - **Data Science** : Pandas, NumPy, Scikit-learn, PyTorch, tensorMatplotlib, Seaborn
+    - **Data Science** : Pandas, NumPy, Scikit-learn, TensorFlow, tensorMatplotlib, Seaborn
     - **Web/Frameworks** : Streamlit, Flask, HTML, CSS
     - **Outils** : Git, Jupyter Notebook
     """)
