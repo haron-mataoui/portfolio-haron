@@ -283,30 +283,46 @@ cols = st.columns(2)
 
 for i, proj in enumerate(projects):
     with cols[i % 2]:
-        img_encoded = img_to_bytes(proj["img"])
-        image_html = f"<img src='data:image/png;base64,{img_encoded}'>" if img_encoded else "<div style='height: 140px; background:#e0e0e0; border-radius:10px 10px 0 0;'></div>"
-        tags_html = "".join([f"<span class='tech-tag'>{t}</span>" for t in proj["tech"]])
-        buttons_html = f"""
-        <div class="project-buttons">
-            <a href="{proj['code']}" target="_blank" class="button-link">Code ↗️</a>
-            {f'<a href="{proj["Lancer"]}" target="_self" class="button-link Lancer">Lancer</a>' if proj["Lancer"] else ""}
-        </div>
-        """
+        # --- Image ---
+        img_path = proj.get("img")
+        img_encoded = img_to_bytes(img_path) if img_path else None
+        image_html = (
+            f"<img src='data:image/png;base64,{img_encoded}'>" 
+            if img_encoded 
+            else "<div style='height: 140px; background:#e0e0e0; border-radius:10px 10px 0 0;'></div>"
+        )
+
+        # --- Tags techniques ---
+        tech_tags = proj.get("tech", [])
+        tags_html = "".join([f"<span class='tech-tag'>{t}</span>" for t in tech_tags])
+
+        # --- Boutons ---
+        code_link = proj.get("code")
+        lancer_link = proj.get("Lancer")
+        buttons_html = "<div class='project-buttons'>"
+        if code_link:
+            buttons_html += f'<a href="{code_link}" target="_blank" class="button-link">Code ↗️</a>'
+        if lancer_link:
+            buttons_html += f'<a href="{lancer_link}" target="_self" class="button-link Lancer">Lancer</a>'
+        buttons_html += "</div>"
+
+        # --- HTML du projet ---
         project_html = f"""
         <div class="project-card">
             {image_html}
             <div class="project-content">
                 <div class="project-text">
-                    <h3>{proj['title']}</h3>
-                    <p>{proj['desc']}</p>
+                    <h3>{proj.get('title', 'Projet')}</h3>
+                    <p>{proj.get('desc', '')}</p>
                 </div>
                 <div class="project-tags">{tags_html}</div>
                 {buttons_html}
             </div>
         </div>
         """
+
         st.markdown(project_html, unsafe_allow_html=True)
-        st.write("")
+        st.write("")  # pour l'espacement
 
 st.divider()
 st.success("💬 N’hésitez pas à me contacter pour échanger sur mes projets ou sur une opportunité de stage !")
