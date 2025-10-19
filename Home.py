@@ -260,6 +260,7 @@ projects = [
         "title": " Analyse de portefeuille ", 
         "desc": " Permet d’explorer des données boursières historiques de plusieurs actions, de visualiser leurs prix ajustés, rendements, volatilité, corrélations et de réaliser une analyse en composantes principales (PCA). Elle intègre également un modèle simple de prévision linéaire des prix futurs.", 
         "img": "assets/pf.png", 
+        "code": "https://gitlab.com/haron.mataoui8", 
         "Lancer":"/Analyse_de_portefeuille",
         "tech": ["yfinance", "NumPy", "pandas", "sklearn", "PCA"]
     },
@@ -268,8 +269,8 @@ projects = [
         "title": "💳 Détection de Fraude Bancaire", 
         "desc": "Analyse un jeu de données de transactions par carte bancaire. Applique un rééquilibrage (SMOTE) pour gérer la rareté des fraudes et entraîne un réseau de neurones avec TensorFlow/Keras pour classer les transactions comme légitimes ou frauduleuses. Inclut une interface de prédiction en temps réel.", 
         "img": "assets/phishing.jpg", 
-        "code": "http://localhost:8506/fraud_detection_tensorflow", 
-        "Lancer":"/raud_detection_tensor",
+        "code": "https://gitlab.com/haron.mataoui8", 
+        "Lancer":"/fraud_detection_tensor",
         "tech": ["TensorFlow", "Keras", "Streamlit", "pandas", "scikit-learn", "imbalanced-learn"]
     }
 
