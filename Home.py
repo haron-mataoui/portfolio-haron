@@ -252,7 +252,7 @@ projects = [
         "title": "💡 Production d’électricité", 
         "desc": "Analyse et visualisation de la production et consommation électrique mondiale.", 
         "img": "assets/projet4.png", 
-        "Lancer": "/Diabetes_Classification",
+        "Lancer": "https://haron2003.pythonanywhere.com",
         "tech": ["Flask", "Plotly", "Analyse de données"]
     },
 
@@ -270,7 +270,7 @@ projects = [
         "desc": "Analyse un jeu de données de transactions par carte bancaire. Applique un rééquilibrage (SMOTE) pour gérer la rareté des fraudes et entraîne un réseau de neurones avec TensorFlow/Keras pour classer les transactions comme légitimes ou frauduleuses. Inclut une interface de prédiction en temps réel.", 
         "img": "assets/phishing.jpg", 
         "code": "https://gitlab.com/haron.mataoui8", 
-        "Lancer":"/fraud_detection_tensor",
+        "Lancer":"/fraud_detection_tensorflow",
         "tech": ["TensorFlow", "Keras", "Streamlit", "pandas", "scikit-learn", "imbalanced-learn"]
     }
 
