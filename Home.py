@@ -258,30 +258,23 @@ projects = [
     },
 
     {
-        "title": "🔢 Reconnaissance de Chiffres", 
-        "desc": "Projet de reconnaissance de chiffres manuscrits avec visualisation des prédictions.", 
-        "img": "assets/projet5.jpg", 
-        "code": "http://localhost:8504/nombres", 
-        "Lancer": None,
-        "tech": ["PyTorch", "NumPy", "Machine Learning"]
-    },
-    {
-        "title": "🌸 Reconnaissance de fleure", 
-        "desc": "Projet de reconnaissance de fleure avec visualisation des prédictions.", 
-        "img": "assets/86.jpg", 
-        "code": "http://localhost:8504/nombres", 
-        "Lancer": None,
-        "tech": ["PyTorch", "NumPy", "Machine Learning"]
-    },
-
-    {
         "title": " Analyse de portefeuille ", 
         "desc": " Permet d’explorer des données boursières historiques de plusieurs actions, de visualiser leurs prix ajustés, rendements, volatilité, corrélations et de réaliser une analyse en composantes principales (PCA). Elle intègre également un modèle simple de prévision linéaire des prix futurs.", 
         "img": "assets/pf.png", 
         "code": "http://localhost:8506/Analyse_de_portefeuille", 
         "Lancer": None,
         "tech": ["yfinance", "NumPy", "pandas", "sklearn", "PCA"]
+    },
+
+    {
+        "title": "💳 Détection de Fraude Bancaire", 
+        "desc": "Analyse un jeu de données de transactions par carte bancaire. Applique un rééquilibrage (SMOTE) pour gérer la rareté des fraudes et entraîne un réseau de neurones avec TensorFlow/Keras pour classer les transactions comme légitimes ou frauduleuses. Inclut une interface de prédiction en temps réel.", 
+        "img": "assets/phishing.jpg", 
+        "code": "http://localhost:8506/fraud_detection_tensorflow", 
+        "Lancer": None,
+        "tech": ["TensorFlow", "Keras", "Streamlit", "pandas", "scikit-learn", "imbalanced-learn"]
     }
+
 
 
 ]

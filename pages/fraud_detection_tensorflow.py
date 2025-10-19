@@ -29,15 +29,15 @@ df = load_data()
 
 # --- Définition des sous-onglets ---
 tabs = st.tabs([
-    "📊 Exploration des données",
-    "🧠 Entraînement du modèle",
-    "📈 Évaluation et Visualisations",
-    "🧾 Prédiction en direct"
+    " Exploration des données",
+    " Entraînement du modèle",
+    " Évaluation et Visualisations",
+    " Prédiction en direct"
 ])
 
 # ----------------- TAB 1: EXPLORATION -----------------
 with tabs[0]:
-    st.header("📊 Exploration du Dataset")
+    st.header(" Exploration du Dataset")
 
     st.write("### Aperçu des données :")
     st.dataframe(df.head())
@@ -55,7 +55,7 @@ with tabs[0]:
 
 # ----------------- TAB 2: ENTRAÎNEMENT -----------------
 with tabs[1]:
-    st.header("🧠 Entraînement du Modèle")
+    st.header(" Entraînement du Modèle")
 
     X = df.drop("Class", axis=1)
     y = df["Class"]
@@ -65,7 +65,7 @@ with tabs[1]:
 
     smote = SMOTE(random_state=42)
     X_res, y_res = smote.fit_resample(X_scaled, y)
-    st.write(f"✅ Après SMOTE : {y_res.value_counts().to_dict()}")
+    st.write(f" Après SMOTE : {y_res.value_counts().to_dict()}")
 
     X_train, X_test, y_train, y_test = train_test_split(
         X_res, y_res, test_size=0.2, random_state=42
@@ -92,7 +92,7 @@ with tabs[1]:
             batch_size=2048,
             verbose=0
         )
-    st.success("✅ Entraînement terminé !")
+    st.success(" Entraînement terminé !")
 
     st.subheader("📚 Architecture du modèle")
     model.summary(print_fn=lambda x: st.text(x))
@@ -105,7 +105,7 @@ with tabs[1]:
 
 # ----------------- TAB 3: ÉVALUATION -----------------
 with tabs[2]:
-    st.header("📈 Évaluation du Modèle")
+    st.header(" Évaluation du Modèle")
 
     if "model" in st.session_state:
         model = st.session_state.model
@@ -161,7 +161,7 @@ with tabs[2]:
 
 # ----------------- TAB 4: PRÉDICTION -----------------
 with tabs[3]:
-    st.header("🧾 Tester une Transaction")
+    st.header(" Tester une Transaction")
 
     if "model" in st.session_state:
         model = st.session_state.model
@@ -171,14 +171,14 @@ with tabs[3]:
         for i, col in enumerate(df.columns[:-1]):  # exclude 'Class'
             input_data[col] = st.number_input(f"{col}", value=float(df[col].median()))
 
-        if st.button("🔍 Prédire fraude / normal"):
+        if st.button(" Prédire fraude / normal"):
             input_df = pd.DataFrame([input_data])
             input_scaled = scaler.transform(input_df)
             pred_proba = model.predict(input_scaled)[0][0]
             st.write(f"**Probabilité de fraude :** {pred_proba:.3f}")
             if pred_proba > 0.5:
-                st.error("⚠️ Transaction potentiellement frauduleuse !")
+                st.error(" Transaction potentiellement frauduleuse !")
             else:
-                st.success("✅ Transaction probablement légitime.")
+                st.success(" Transaction probablement légitime.")
     else:
-        st.warning("⚠️ Entraîne d'abord le modèle dans l'onglet '🧠 Entraînement'.")
+        st.warning("⚠️ Entraîne d'abord le modèle dans l'onglet ' Entraînement'.")
