@@ -181,7 +181,7 @@ with st.sidebar:
         st.image(Image.open("assets/photo_profil.png"), width=150)
     st.markdown("<h1 style='text-align: center;'>Haron MATAOUI</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>🎓 Élève ingénieur à l’ENSIIE (IMT)</p>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center;'>💡 Passionné par la Data Science & le Machine Learning</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'> Passionné par la Data Science & le Machine Learning</p>", unsafe_allow_html=True)
     
     st.divider()
 
@@ -212,7 +212,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.divider()
-    st.info("🔍 Recherche stage (3-4 mois) - Mai 2025")
+    st.info(" Recherche stage (3-4 mois) - Mai 2025")
 
 
 # --- CONTENU PRINCIPAL ---
@@ -301,7 +301,7 @@ for i, proj in enumerate(projects):
         lancer_link = proj.get("Lancer")
         buttons_html = "<div class='project-buttons'>"
         if code_link:
-            buttons_html += f'<a href="{code_link}" target="_blank" class="button-link">Code ↗️</a>'
+            buttons_html += f'<a href="{code_link}" target="_blank" class="button-link">Code </a>'
         if lancer_link:
             buttons_html += f'<a href="{lancer_link}" target="_self" class="button-link Lancer">Lancer</a>'
         buttons_html += "</div>"
@@ -325,4 +325,4 @@ for i, proj in enumerate(projects):
         st.write("")  # pour l'espacement
 
 st.divider()
-st.success("💬 N’hésitez pas à me contacter pour échanger sur mes projets ou sur une opportunité de stage !")
+st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou sur une opportunité de stage !")
