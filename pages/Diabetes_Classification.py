@@ -60,7 +60,9 @@ auto_train = st.sidebar.checkbox("Entraîner tous les modèles automatiquement",
 test_size = st.sidebar.slider("Taille du test (%)", 10, 40, 20)
 random_state = st.sidebar.number_input("Random state", value=42, step=1)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size/100.0, random_state=int(random_state))
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=test_size/100.0, random_state=int(random_state)
+)
 train_btn = st.sidebar.button("🔁 Entraîner maintenant") if not auto_train else False
 
 # --- Fonctions d'entraînement / évaluation ---
@@ -88,7 +90,9 @@ def train_models(X_train, X_test, y_train, y_test, X_full, y_full):
     # SVM
     scaler = StandardScaler()
     X_full_scaled = scaler.fit_transform(X_full)
-    X_train_svm, X_test_svm, y_train_svm, y_test_svm = train_test_split(X_full_scaled, y_full, test_size=(X_test.shape[0]/X_full.shape[0]), random_state=42)
+    X_train_svm, X_test_svm, y_train_svm, y_test_svm = train_test_split(
+        X_full_scaled, y_full, test_size=(X_test.shape[0]/X_full.shape[0]), random_state=42
+    )
     svm_model = SVC(kernel='rbf', C=1, gamma='scale', probability=False)
     svm_model.fit(X_train_svm, y_train_svm)
     y_svm_pred = svm_model.predict(X_test_svm)
@@ -104,6 +108,7 @@ def train_models(X_train, X_test, y_train, y_test, X_full, y_full):
     }
     return results
 
+# --- Entraînement automatique ou manuel ---
 if auto_train or train_btn:
     with st.spinner("🔧 Entraînement des modèles..."):
         results = train_models(X_train, X_test, y_train, y_test, X, y)
@@ -112,88 +117,132 @@ else:
     st.info("Cochez 'Entraîner automatiquement' ou cliquez sur 'Entraîner maintenant' pour lancer l'entraînement.")
     st.stop()
 
-# --- Affichage résultats détaillés ---
-st.header("📈 Résultats par modèle")
-
-# Fonction pour afficher chaque modèle
+# --- Fonction d'affichage des résultats ---
 def display_model_results(model_name, model_key, cmap):
     st.subheader(model_name)
     res = results[model_key]
+
     st.write(f"**Accuracy :** {res['acc']:.4f}")
+
     st.write("**Classification Report :**")
     st.dataframe(pd.DataFrame(res["report"]).T.round(3))
+
     st.write("**Matrice de confusion :**")
     fig, ax = plt.subplots(figsize=(5, 4))
     sns.heatmap(res["cm"], annot=True, fmt="d", cmap=cmap, ax=ax)
-    ax.set_xlabel("Prédit"); ax.set_ylabel("Réel")
+    ax.set_xlabel("Prédit")
+    ax.set_ylabel("Réel")
     st.pyplot(fig)
+
     st.write("**Validation croisée (5 folds)**")
     st.write(np.round(res["cv"], 3))
     st.write(f"Moyenne : {res['cv'].mean():.3f} ± {res['cv'].std():.3f}")
-    if model_key=="rf":
+
+    if model_key == "rf":
         st.write("**Importance des variables :**")
-        imp_df = pd.DataFrame({"feature": X.columns, "importance": res["importances"]}).sort_values(by="importance", ascending=True)
-        fig, ax = plt.subplots(figsize=(8,6))
+        imp_df = pd.DataFrame({
+            "feature": X.columns,
+            "importance": res["importances"]
+        }).sort_values(by="importance", ascending=True)
+
+        fig, ax = plt.subplots(figsize=(8, 6))
         sns.barplot(x="importance", y="feature", data=imp_df, palette="viridis", ax=ax)
         ax.set_title("Importance des variables - Random Forest")
         st.pyplot(fig)
 
-display_model_results("🔹 Régression Logistique", "log", "Blues")
-display_model_results("🌲 Random Forest", "rf", "Greens")
-display_model_results("🤖 SVM (RBF)", "svm", "Oranges")
+# --- Organisation en onglets ---
+st.header(" Analyse et Prédiction")
+tabs = st.tabs([
+    "Régression Logistique",
+    "Random Forest",
+    "SVM (RBF)",
+    "Comparaison globale",
+    " Prévisions sur un patient"
+])
 
-# --- Comparaison globale ---
-st.header("📊 Comparaison globale des modèles")
-df_results = pd.DataFrame({
-    "Modèle": ["Régression Logistique", "Random Forest", "SVM (RBF)"],
-    "Accuracy Test": [results["log"]["acc"], results["rf"]["acc"], results["svm"]["acc"]],
-    "Accuracy Cross-Val": [results["log"]["cv"].mean(), results["rf"]["cv"].mean(), results["svm"]["cv"].mean()],
-    "Écart-type CV": [results["log"]["cv"].std(), results["rf"]["cv"].std(), results["svm"]["cv"].std()]
-})
-st.dataframe(df_results.style.format({"Accuracy Test": "{:.4f}", "Accuracy Cross-Val": "{:.4f}", "Écart-type CV": "{:.4f}"}))
+# --- Onglet 1 : Régression Logistique ---
+with tabs[0]:
+    display_model_results("Régression Logistique", "log", "Blues")
 
-fig, ax = plt.subplots(figsize=(8, 4))
-sns.barplot(data=df_results, x="Accuracy Cross-Val", y="Modèle", palette="coolwarm", ax=ax)
-ax.set_title("Comparaison des modèles (Validation croisée)")
-st.pyplot(fig)
+# --- Onglet 2 : Random Forest ---
+with tabs[1]:
+    display_model_results("Random Forest", "rf", "Greens")
+
+# --- Onglet 3 : SVM ---
+with tabs[2]:
+    display_model_results("SVM (RBF)", "svm", "Oranges")
+
+# --- Onglet 4 : Comparaison globale ---
+with tabs[3]:
+    st.subheader("Comparaison globale des modèles")
+
+    df_results = pd.DataFrame({
+        "Modèle": ["Régression Logistique", "Random Forest", "SVM (RBF)"],
+        "Accuracy Test": [results["log"]["acc"], results["rf"]["acc"], results["svm"]["acc"]],
+        "Accuracy Cross-Val": [results["log"]["cv"].mean(), results["rf"]["cv"].mean(), results["svm"]["cv"].mean()],
+        "Écart-type CV": [results["log"]["cv"].std(), results["rf"]["cv"].std(), results["svm"]["cv"].std()]
+    })
+
+    st.dataframe(
+        df_results.style.format({
+            "Accuracy Test": "{:.4f}",
+            "Accuracy Cross-Val": "{:.4f}",
+            "Écart-type CV": "{:.4f}"
+        })
+    )
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    sns.barplot(data=df_results, x="Accuracy Cross-Val", y="Modèle", palette="coolwarm", ax=ax)
+    ax.set_title("Comparaison des modèles (Validation croisée)")
+    st.pyplot(fig)
+
+# --- Onglet 5 : Prévision ---
+with tabs[4]:
+    st.subheader("Entrer les caractéristiques du patient")
+
+    input_data = {}
+    for c in X.columns:
+        median = float(df[c].median())
+        minv = float(df[c].min())
+        maxv = float(df[c].max())
+        step = (maxv - minv) / 100 if maxv > minv else 1.0
+        input_data[c] = st.number_input(
+            f"{c}", value=median, min_value=minv - 100.0, max_value=maxv + 100.0, step=step
+        )
+
+    pred_model_choice = st.selectbox(
+        "Choisir le modèle pour la prédiction",
+        ["Random Forest", "Régression Logistique", "SVM (RBF)"]
+    )
+
+    predict_btn = st.button(" Prédire le diabète")
+
+    if predict_btn:
+        input_df = pd.DataFrame([input_data])[X.columns]
+
+        if pred_model_choice == "Random Forest":
+            model = results["rf"]["model"]
+            pred = model.predict(input_df)[0]
+            proba = model.predict_proba(input_df)[0] if hasattr(model, "predict_proba") else None
+
+        elif pred_model_choice == "Régression Logistique":
+            model = results["log"]["model"]
+            pred = model.predict(input_df)[0]
+            proba = model.predict_proba(input_df)[0] if hasattr(model, "predict_proba") else None
+
+        else:  # SVM
+            model = results["svm"]["model"]
+            scaler = results["svm"]["scaler"]
+            input_scaled = scaler.transform(input_df.values)
+            pred = model.predict(input_scaled)[0]
+            proba = None
+
+        st.markdown(f"### 🩺 Résultat : {'**Diabétique**' if pred == 1 else '**Non diabétique**'}")
+
+        if proba is not None:
+            st.write(f"**Probabilités :** {np.round(proba, 3)}")
+        else:
+            st.info("Ce modèle ne fournit pas de probabilités (SVM sans probability=True).")
 
 st.markdown("---")
-
-# --- Section interactive : prédiction d’un patient ---
-st.header("🧪 Tester un nouveau patient")
-input_data = {}
-st.subheader("Entrer les caractéristiques du patient")
-for c in X.columns:
-    median = float(df[c].median())
-    minv = float(df[c].min())
-    maxv = float(df[c].max())
-    step = (maxv-minv)/100 if maxv>minv else 1.0
-    input_data[c] = st.number_input(f"{c}", value=median, min_value=minv-100.0, max_value=maxv+100.0, step=step)
-
-pred_model_choice = st.selectbox("Choisir le modèle pour la prédiction", ["Random Forest", "Régression Logistique", "SVM (RBF)"])
-predict_btn = st.button("🧩 Prédire diabète")
-
-if predict_btn:
-    input_df = pd.DataFrame([input_data])[X.columns]
-    if pred_model_choice=="Random Forest":
-        model = results["rf"]["model"]
-        pred = model.predict(input_df)[0]
-        proba = model.predict_proba(input_df)[0] if hasattr(model, "predict_proba") else None
-    elif pred_model_choice=="Régression Logistique":
-        model = results["log"]["model"]
-        pred = model.predict(input_df)[0]
-        proba = model.predict_proba(input_df)[0] if hasattr(model, "predict_proba") else None
-    else:
-        model = results["svm"]["model"]
-        scaler = results["svm"]["scaler"]
-        input_scaled = scaler.transform(input_df.values)
-        pred = model.predict(input_scaled)[0]
-        proba = None
-    st.write(f"**Prédit :** {'Diabétique' if pred==1 else 'Non diabétique'}")
-    if proba is not None:
-        st.write(f"**Probabilités :** {np.round(proba,3)}")
-    else:
-        st.info("Ce modèle ne fournit pas de probabilités (SVM entraîné sans probability=True).")
-
-st.markdown("---")
-st.info("✅ Cette application conserve toutes les étapes : nettoyage, entraînement des 3 modèles, matrices, validation croisée, comparaisons et prédiction interactive.")
+st.info(" Cette application permet le nettoyage, l'entraînement des modèles, la comparaison et la prédiction interactive.")

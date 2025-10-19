@@ -130,7 +130,7 @@ st.markdown("""
             text-align: center;
             flex-grow: 1;
         }
-        .button-link.demo {
+        .button-link.Lancer {
             background-color: #415a77;
         }
         .button-link:hover {
@@ -229,7 +229,7 @@ projects = [
         "desc": "Analyse des rendements potentiels et performance d’un portefeuille d’investissement.", 
         "img": "assets/projet1.png", 
         "code": "https://gitlab.com/haron.mataoui8/analyse-de-portefeuille-d-investissement-par-simulation-de-monte-carlo", 
-        "demo": "/Simulation_Monte_Carlo_-_Portefeuille_Boursier",
+        "Lancer": "/Simulation_Monte_Carlo_-_Portefeuille_Boursier",
         "tech": ["Python", "Pandas", "NumPy", "Matplotlib"]
     },
     {
@@ -237,7 +237,7 @@ projects = [
         "desc": "Prédiction du statut d’un prêt bancaire à partir de données clients.", 
         "img": "assets/projet2.png", 
         "code": "https://gitlab.com/haron.mataoui8/machine-learning-pret-bancaire", 
-        "demo": "/Prediction_pret",
+        "Lancer": "/Prediction_pret",
         "tech": ["Scikit-learn", "Pandas", "Streamlit"]
     },
     {
@@ -245,7 +245,7 @@ projects = [
         "desc": "Analyse prédictive basée sur des données médicales pour détecter le diabète.", 
         "img": "assets/projet3.png", 
         "code": "https://gitlab.com/haron.mataoui8/machine-learning-diabete", 
-        "demo": "/Diabetes_Classification",
+        "Lancer": "/Diabetes_Classification",
         "tech": ["Machine Learning", "Seaborn", "Classification"]
     },
     {
@@ -253,9 +253,37 @@ projects = [
         "desc": "Analyse et visualisation de la production et consommation électrique mondiale.", 
         "img": "assets/projet4.png", 
         "code": "https://haron2003.pythonanywhere.com", 
-        "demo": None,
+        "Lancer": None,
         "tech": ["Flask", "Plotly", "Analyse de données"]
+    },
+
+    {
+        "title": "🔢 Reconnaissance de Chiffres", 
+        "desc": "Projet de reconnaissance de chiffres manuscrits avec visualisation des prédictions.", 
+        "img": "assets/projet5.jpg", 
+        "code": "http://localhost:8504/nombres", 
+        "Lancer": None,
+        "tech": ["PyTorch", "NumPy", "Machine Learning"]
+    },
+    {
+        "title": "🌸 Reconnaissance de fleure", 
+        "desc": "Projet de reconnaissance de fleure avec visualisation des prédictions.", 
+        "img": "assets/86.jpg", 
+        "code": "http://localhost:8504/nombres", 
+        "Lancer": None,
+        "tech": ["PyTorch", "NumPy", "Machine Learning"]
+    },
+
+    {
+        "title": " Analyse de portefeuille ", 
+        "desc": " Permet d’explorer des données boursières historiques de plusieurs actions, de visualiser leurs prix ajustés, rendements, volatilité, corrélations et de réaliser une analyse en composantes principales (PCA). Elle intègre également un modèle simple de prévision linéaire des prix futurs.", 
+        "img": "assets/pf.png", 
+        "code": "http://localhost:8506/Analyse_de_portefeuille", 
+        "Lancer": None,
+        "tech": ["yfinance", "NumPy", "pandas", "sklearn", "PCA"]
     }
+
+
 ]
 
 st.header("Mes Projets Récents")
@@ -269,7 +297,7 @@ for i, proj in enumerate(projects):
         buttons_html = f"""
         <div class="project-buttons">
             <a href="{proj['code']}" target="_blank" class="button-link">Code ↗️</a>
-            {f'<a href="{proj["demo"]}" target="_self" class="button-link demo">Démo 🚀</a>' if proj["demo"] else ""}
+            {f'<a href="{proj["Lancer"]}" target="_self" class="button-link Lancer">Lancer</a>' if proj["Lancer"] else ""}
         </div>
         """
         project_html = f"""
