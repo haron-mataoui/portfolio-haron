@@ -300,6 +300,11 @@ with tabs[3]:
     Dans une application réelle de détection de fraude, les variables `V1` à `V28` seraient **calculées automatiquement** à partir des données brutes d’une transaction via la même transformation PCA que celle utilisée pour entraîner le modèle.
 
     Ici, comme les variables originales sont inconnues, **l’utilisateur ne peut pas les saisir lui-même**.
+            
+
+    Time représente le temps écoulé (en secondes) entre la première transaction du dataset et la transaction actuelle.
+    Amount correspond au montant de la transaction bancaire (en euros).
+
     """)
 
 
