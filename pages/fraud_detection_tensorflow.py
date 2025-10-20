@@ -303,6 +303,7 @@ with tabs[3]:
             
 
     Time représente le temps écoulé (en secondes) entre la première transaction du dataset et la transaction actuelle.
+            
     Amount correspond au montant de la transaction bancaire (en euros).
 
     """)
