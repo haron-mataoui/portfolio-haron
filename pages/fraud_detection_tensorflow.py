@@ -120,7 +120,7 @@ with tabs[1]:
 
     Pour corriger cela, nous utilisons **SMOTE (Synthetic Minority Over-sampling Technique)**.
     """)
-    with st.expander("🔎 Cliquez ici pour comprendre comment fonctionne SMOTE en détail"):
+    with st.expander(" Cliquez ici pour comprendre comment fonctionne SMOTE en détail"):
         st.markdown("""
         Plutôt que de simplement dupliquer les rares exemples de fraude que nous avons, SMOTE est plus intelligent :
         
@@ -138,7 +138,7 @@ with tabs[1]:
     st.json(pd.Series(y_train).value_counts().to_dict())
 
     if st.button("Lancer l'entraînement du modèle"):
-        with st.spinner("⏳ Application de SMOTE et entraînement du modèle en cours... Cela peut prendre quelques minutes."):
+        with st.spinner(" Application de SMOTE et entraînement du modèle en cours... Cela peut prendre quelques minutes."):
             smote = SMOTE(random_state=42)
             X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
 
@@ -170,7 +170,7 @@ with tabs[1]:
                 batch_size=2048,
                 verbose=0
             )
-            st.success("✅ Entraînement terminé !")
+            st.success(" Entraînement terminé !")
 
             st.subheader("Architecture du modèle")
             model_summary = []
@@ -223,7 +223,7 @@ with tabs[2]:
         st.markdown("Visualise directement le nombre de bonnes et de mauvaises prédictions.")
         cm = confusion_matrix(y_test, y_pred)
         fig_cm, ax_cm = plt.subplots(figsize=(6, 5))
-        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax_cm=ax_cm,
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax_cm,
                     xticklabels=['Légitime', 'Fraude'], yticklabels=['Légitime', 'Fraude'])
         ax_cm.set_xlabel("Prédiction")
         ax_cm.set_ylabel("Valeur Réelle")
@@ -277,12 +277,31 @@ with tabs[2]:
 
 
     else:
-        st.warning("⚠️ Lancez d'abord l'entraînement du modèle dans l'onglet 'Entraînement du modèle'.")
+        st.warning(" Lancez d'abord l'entraînement du modèle dans l'onglet 'Entraînement du modèle'.")
 
 
 # ----------------- TAB 4: PRÉDICTION -----------------
 with tabs[3]:
     st.header("Tester une Transaction en Direct")
+
+
+    st.info("""
+    ###  Comprendre les variables `V1` à `V28`
+
+    Les colonnes `V1` à `V28` ne représentent **pas des informations réelles** sur les transactions (comme le montant, le lieu, le type d’achat, etc.).  
+    Elles proviennent d’une **Analyse en Composantes Principales (ACP / PCA)** réalisée pour **anonymiser les données d’origine** tout en conservant les structures statistiques.
+
+    ####  Concrètement :
+    - Chaque `Vn` est une **combinaison mathématique** de plusieurs caractéristiques d’origine (comme la fréquence d’achat, la catégorie du commerçant, l’heure, etc.).
+    - Ces variables ont été **transformées pour la confidentialité** : leur sens exact n’est **pas interprétable directement**.
+    - Par exemple, `V5` ne veut pas dire “montant” ni “type d’achat” : c’est une **dimension abstraite** du comportement transactionnel.
+
+    ####  Pourquoi cela complique la prédiction manuelle :
+    Dans une application réelle de détection de fraude, les variables `V1` à `V28` seraient **calculées automatiquement** à partir des données brutes d’une transaction via la même transformation PCA que celle utilisée pour entraîner le modèle.
+
+    Ici, comme les variables originales sont inconnues, **l’utilisateur ne peut pas les saisir lui-même**.
+    """)
+
 
     if "model" in st.session_state:
         model = st.session_state.model
@@ -299,7 +318,7 @@ with tabs[3]:
                  input_data[col_name] = st.number_input(f"{col_name}", value=float(df_cols[col_name].median()), key=f"input_{col_name}")
 
 
-        if st.button("🔎 Analyser la transaction"):
+        if st.button(" Analyser la transaction"):
             input_df = pd.DataFrame([input_data])
             input_scaled = scaler.transform(input_df)
             pred_proba = model.predict(input_scaled)[0][0]
@@ -313,5 +332,5 @@ with tabs[3]:
             st.progress(float(pred_proba))
             st.write(f"Le score de probabilité de fraude est de **{pred_proba:.4f}**. Le seuil de classification est à 0.5.")
     else:
-        st.warning("⚠️ Lancez d'abord l'entraînement du modèle dans l'onglet 'Entraînement du modèle'.")
+        st.warning(" Lancez d'abord l'entraînement du modèle dans l'onglet 'Entraînement du modèle'.")
 
