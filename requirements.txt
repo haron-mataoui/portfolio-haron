@@ -1,4 +1,3 @@
-python-3.10
-astreamlit
+streamlit
 pandas
 numpy
