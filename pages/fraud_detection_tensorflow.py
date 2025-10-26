@@ -339,4 +339,3 @@ with tabs[3]:
             st.write(f"Le score de probabilité de fraude est de **{pred_proba:.4f}**. Le seuil de classification est à 0.5.")
     else:
         st.warning(" Lancez d'abord l'entraînement du modèle dans l'onglet 'Entraînement du modèle'.")
-
