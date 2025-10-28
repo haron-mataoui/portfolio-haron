@@ -338,7 +338,7 @@ st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou 
 st.title("Mon Portfolio - PDF intégré")
 
     # Chemin du PDF
-pdf_file = "/assets/CV_Haron_MATAOUI.pdf"
+pdf_file = "assets/CV_Haron_MATAOUI.pdf"
 
 with open(pdf_file, "rb") as f:
     base64_pdf = base64.b64encode(f.read()).decode("utf-8")
