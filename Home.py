@@ -183,6 +183,12 @@ with st.sidebar:
     st.markdown("<p style='text-align: center;'>🎓 Élève ingénieur à l’ENSIIE (IMT)</p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'> Passionné par la Data Science & le Machine Learning</p>", unsafe_allow_html=True)
     
+
+
+
+
+
+
     st.divider()
 
     st.markdown("### Compétences Techniques")
@@ -326,3 +332,17 @@ for i, proj in enumerate(projects):
 
 st.divider()
 st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou sur une opportunité de stage !")
+
+
+
+st.title("Mon Portfolio - PDF intégré")
+
+    # Chemin du PDF
+pdf_file = "/assets/CV_Haron_MATAOUI.pdf"
+
+with open(pdf_file, "rb") as f:
+    base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+
+pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>'
+st.markdown(pdf_display, unsafe_allow_html=True)
+
