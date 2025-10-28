@@ -337,20 +337,27 @@ st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou 
 
 import streamlit as st
 from pathlib import Path
-import base64
 
 st.title("Mon CV")
 
-# Chemin absolu du PDF basé sur le fichier Python
+# Chemin relatif du PDF
 pdf_path = Path(__file__).parent / "assets" / "CV_Haron_MATAOUI.pdf"
 
 if pdf_path.exists():
+    # Bouton de téléchargement
     with open(pdf_path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+        st.download_button(
+            label="📄 Télécharger mon CV",
+            data=f,
+            file_name="CV_Haron_MATAOUI.pdf",
+            mime="application/pdf"
+        )
     
-    # Affichage avec iframe
+    # Aperçu du PDF directement dans l'iframe
     st.markdown(
-        f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>',
+        f"""
+        <iframe src="{pdf_path}" width="700" height="1000" type="application/pdf"></iframe>
+        """,
         unsafe_allow_html=True
     )
 else:
