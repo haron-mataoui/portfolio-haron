@@ -339,21 +339,33 @@ st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou 
 
 
 
+import streamlit as st
+import base64
+
 st.title("Mon CV")
 
-# Lien direct vers le PDF sur GitHub
-pdf_url = "https://raw.githubusercontent.com/haron-mataoui/portfolio-haron/main/assets/CV_Haron_MATAOUI.pdf"
+pdf_path = "assets/CV_Haron_MATAOUI.pdf"
+
+# Vérifie que le PDF existe
+try:
+    with open(pdf_path, "rb") as f:
+        pdf_bytes = f.read()
+except FileNotFoundError:
+    st.error("Fichier PDF introuvable.")
+    st.stop()
 
 # Bouton de téléchargement
 st.download_button(
     label="📄 Télécharger mon CV",
-    data=pdf_url,
+    data=pdf_bytes,
     file_name="CV_Haron_MATAOUI.pdf",
     mime="application/pdf"
 )
 
-# Aperçu du PDF via iframe
-st.markdown(
-    f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>',
-    unsafe_allow_html=True
-)
+# Conversion en base64 pour affichage
+base64_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
+pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>'
+
+# Affichage via st.components.v1.html (plus fiable que st.markdown)
+import streamlit.components.v1 as components
+components.html(pdf_display, height=1000)
