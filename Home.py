@@ -335,7 +335,7 @@ st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou 
 
 
 
-st.title("Mon Portfolio - PDF intégré")
+st.title("Mon CV")
 
     # Chemin du PDF
 pdf_file = "assets/CV_Haron_MATAOUI.pdf"
