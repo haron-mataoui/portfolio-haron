@@ -335,14 +335,21 @@ st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou 
 
 
 
+from pathlib import Path
+import base64
+import streamlit as st
+
 st.title("Mon CV")
 
-    # Chemin du PDF
-pdf_file = "assets/CV_Haron_MATAOUI.pdf"
+# chemin absolu basé sur le script
+pdf_path = Path(__file__).parent / "assets" / "CV_Haron_MATAOUI.pdf"
 
-with open(pdf_file, "rb") as f:
-    base64_pdf = base64.b64encode(f.read()).decode("utf-8")
-
-pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>'
-st.markdown(pdf_display, unsafe_allow_html=True)
-
+if pdf_path.exists():
+    with open(pdf_path, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+    st.markdown(
+        f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>',
+        unsafe_allow_html=True
+    )
+else:
+    st.error(f"🚫 Fichier PDF introuvable : {pdf_path}")
