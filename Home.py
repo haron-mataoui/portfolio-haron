@@ -335,30 +335,25 @@ st.success(" N’hésitez pas à me contacter pour échanger sur mes projets ou 
 
 
 
-import streamlit as st
-from pathlib import Path
+
+
+
 
 st.title("Mon CV")
 
-# Chemin relatif du PDF
-pdf_path = Path(__file__).parent / "assets" / "CV_Haron_MATAOUI.pdf"
+# Lien direct vers le PDF sur GitHub
+pdf_url = "https://raw.githubusercontent.com/haron-mataoui/portfolio-haron/main/assets/CV_Haron_MATAOUI.pdf"
 
-if pdf_path.exists():
-    # Bouton de téléchargement
-    with open(pdf_path, "rb") as f:
-        st.download_button(
-            label="📄 Télécharger mon CV",
-            data=f,
-            file_name="CV_Haron_MATAOUI.pdf",
-            mime="application/pdf"
-        )
-    
-    # Aperçu du PDF directement dans l'iframe
-    st.markdown(
-        f"""
-        <iframe src="{pdf_path}" width="700" height="1000" type="application/pdf"></iframe>
-        """,
-        unsafe_allow_html=True
-    )
-else:
-    st.error(f"🚫 Fichier PDF introuvable : {pdf_path}")
+# Bouton de téléchargement
+st.download_button(
+    label="📄 Télécharger mon CV",
+    data=pdf_url,
+    file_name="CV_Haron_MATAOUI.pdf",
+    mime="application/pdf"
+)
+
+# Aperçu du PDF via iframe
+st.markdown(
+    f'<iframe src="{pdf_url}" width="700" height="1000" type="application/pdf"></iframe>',
+    unsafe_allow_html=True
+)
