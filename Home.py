@@ -281,9 +281,11 @@ projects = [
     }
 ]
 
+
+
 # --- AFFICHAGE DES PROJETS ---
 cols = st.columns(2)
-for i, proj in enumerate(filtered_projects):
+for i, proj in enumerate(projects):
     with cols[i % 2]:
         img_encoded = img_to_bytes(proj["img"]) if proj.get("img") else None
         image_html = (
