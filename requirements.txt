@@ -9,3 +9,4 @@ tensorflow
 Pillow
 yfinance
 plotly
+streamlit_option_menu
