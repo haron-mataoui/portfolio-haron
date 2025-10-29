@@ -281,18 +281,6 @@ projects = [
     }
 ]
 
-# --- RECHERCHE / FILTRES ---
-st.subheader("🔍 Explore my projects")
-search = st.text_input("Search by title...")
-techs = sorted({t for p in projects for t in p["tech"]})
-selected_techs = st.multiselect("Filter by technology", techs)
-
-filtered_projects = [
-    p for p in projects
-    if (search.lower() in p["title"].lower())
-    and (not selected_techs or any(t in p["tech"] for t in selected_techs))
-]
-
 # --- AFFICHAGE DES PROJETS ---
 cols = st.columns(2)
 for i, proj in enumerate(filtered_projects):
